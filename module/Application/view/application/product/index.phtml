@@ -1,0 +1,98 @@
+<?php
+$this->headTitle('Product List');
+?>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Product List</h1>
+            </div>
+            <div class="col-sm-6 text-right">
+                <button class="btn btn-info" data-toggle="modal" data-target="#apiModal">API Instructions</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Products</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>SKU</th>
+                                <th>Price</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($products as $product): ?>
+                                <tr>
+                                    <td><?= $this->escapeHtml($product->id) ?></td>
+                                    <td><?= $this->escapeHtml($product->name) ?></td>
+                                    <td><?= $this->escapeHtml($product->sku) ?></td>
+                                    <td><?= $this->escapeHtml($product->price) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for API Routes -->
+<div class="modal fade" id="apiModal" tabindex="-1" role="dialog" aria-labelledby="apiModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="apiModalLabel">API Routes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>GET /api/v1/products - Get all products</li>
+                    <li>GET /api/v1/products/{id} - Get product by ID</li>
+                    <li>POST /api/v1/products - Create a new product</li>
+                    <li>PUT /api/v1/products/{id} - Update a product</li>
+                    <li>DELETE /api/v1/products/{id} - Delete a product</li>
+                </ul>
+                <p><strong>Headers:</strong></p>
+                <ul>
+                    <li>API Key: <strong>hfb93hf034jh897gfu</strong></li>
+                    <li>Content-Type: <strong>application/json</strong> (для JSON-запросов)</li>
+                </ul>
+                <p><strong>Examples:</strong></p>
+                <p><strong>GET /api/v1/products</strong></p>
+                <pre><code>curl -H "API-Key: hfb93hf034jh897gfu" -H "Content-Type: application/json" -X GET https://zend-app.takiza.net/api/v1/products</code></pre>
+
+                <p><strong>GET /api/v1/products/{id}</strong></p>
+                <pre><code>curl -H "API-Key: hfb93hf034jh897gfu" -H "Content-Type: application/json" -X GET https://zend-app.takiza.net/api/v1/products/1</code></pre>
+
+                <p><strong>POST /api/v1/products</strong></p>
+                <pre><code>curl -H "API-Key: hfb93hf034jh897gfu" -H "Content-Type: application/json" -X POST -d '{"name":"Product Name", "sku":"123456", "price":100}' https://zend-app.takiza.net/api/v1/products</code></pre>
+
+                <p><strong>PUT /api/v1/products/{id}</strong></p>
+                <pre><code>curl -H "API-Key: hfb93hf034jh897gfu" -H "Content-Type: application/json" -X PUT -d '{"name":"Updated Product Name", "sku":"654321", "price":150}' https://zend-app.takiza.net/api/v1/products/1</code></pre>
+
+                <p><strong>DELETE /api/v1/products/{id}</strong></p>
+                <pre><code>curl -H "API-Key: hfb93hf034jh897gfu" -H "Content-Type: application/json" -X DELETE https://zend-app.takiza.net/api/v1/products/1</code></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

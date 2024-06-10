@@ -23,18 +23,15 @@ class TaskController extends AbstractActionController
 
     public function indexAction()
     {
-        // Создание SQL-запроса
         $sql = $this->table->getSql();
         $select = $sql->select();
 
-        // Создание адаптера для пагинатора
         $paginatorAdapter = new DbSelect(
             $select,
             $this->table->getAdapter(),
             $this->table->getResultSetPrototype()
         );
 
-        // Создание объекта пагинатора
         $paginator = new Paginator($paginatorAdapter);
         $paginator->setCurrentPageNumber($this->params()->fromQuery('page', 1));
         $paginator->setItemCountPerPage($this->config['pagination']['items_per_page']);
@@ -79,7 +76,7 @@ class TaskController extends AbstractActionController
         $form->get('submit')->setValue('Edit');
 
         $request = $this->getRequest();
-        $viewData = ['id' => $id, 'form' => $form, 'task' => $task]; // передаем task в представление
+        $viewData = ['id' => $id, 'form' => $form, 'task' => $task];
 
         if (!$request->isPost()) {
             return $viewData;
