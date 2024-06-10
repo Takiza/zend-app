@@ -1,0 +1,25 @@
+<?php
+/** @var array $sqlQueries */
+?>
+<div class="container mt-5">
+    <h1>SQL Query Examples</h1>
+    <div class="accordion" id="sqlExamplesAccordion">
+        <?php foreach ($sqlQueries as $index => $sqlQuery): ?>
+            <div class="card">
+                <div class="card-header" id="heading<?= $index ?>">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse<?= $index ?>" aria-expanded="true" aria-controls="collapse<?= $index ?>">
+                            <?= $sqlQuery['description'] ?>
+                        </button>
+                    </h2>
+                </div>
+
+                <div id="collapse<?= $index ?>" class="collapse <?= $index === 0 ? 'show' : '' ?>" aria-labelledby="heading<?= $index ?>" data-parent="#sqlExamplesAccordion">
+                    <div class="card-body">
+                        <pre><code><?= $sqlQuery['query'] ?></code></pre>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>

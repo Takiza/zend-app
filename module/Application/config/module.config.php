@@ -53,6 +53,16 @@ return [
                     ],
                 ],
             ],
+            'sql-examples' => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/sql-examples',
+                    'defaults' => [
+                        'controller' => Controller\SqlExamplesController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers' => [
@@ -60,6 +70,7 @@ return [
             Controller\IndexController::class => InvokableFactory::class,
             Controller\TaskController::class => Controller\Factory\TaskControllerFactory::class,
             Controller\ProductController::class => Controller\Factory\ProductControllerFactory::class,
+            Controller\SqlExamplesController::class => InvokableFactory::class,
         ],
     ],
     'service_manager' => [
@@ -102,6 +113,7 @@ return [
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'application/task/index'  => __DIR__ . '/../view/application/task/index.phtml',
             'application/product/index'  => __DIR__ . '/../view/application/product/index.phtml',
+            'application/sql-examples/index' => __DIR__ . '/../view/application/sql-examples/index.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ],
