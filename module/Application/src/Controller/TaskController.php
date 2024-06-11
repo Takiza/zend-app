@@ -9,6 +9,7 @@ use Laminas\Paginator\Adapter\DbSelect;
 use Application\Model\TaskTable;
 use Application\Form\TaskForm;
 use Application\Model\Task;
+use Application\InputFilter\TaskInputFilter;
 
 class TaskController extends AbstractActionController
 {
@@ -47,11 +48,17 @@ class TaskController extends AbstractActionController
         $form->get('submit')->setValue('Add');
 
         $request = $this->getRequest();
-        if ($request->isPost() && $form->setData($request->getPost())->isValid()) {
-            $task = new Task();
-            $task->exchangeArray($form->getData());
-            $this->table->saveTask($task);
-            return $this->redirect()->toRoute('task');
+        if ($request->isPost()) {
+            $inputFilter = new TaskInputFilter();
+            $form->setInputFilter($inputFilter);
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $task = new Task();
+                $task->exchangeArray($form->getData());
+                $this->table->saveTask($task);
+                return $this->redirect()->toRoute('task');
+            }
         }
 
         return ['form' => $form];
@@ -82,7 +89,8 @@ class TaskController extends AbstractActionController
             return $viewData;
         }
 
-        $form->setInputFilter($task->getInputFilter());
+        $inputFilter = new TaskInputFilter();
+        $form->setInputFilter($inputFilter);
         $form->setData($request->getPost());
 
         if (!$form->isValid()) {

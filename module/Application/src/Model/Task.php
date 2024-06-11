@@ -4,7 +4,7 @@ namespace Application\Model;
 
 use Laminas\InputFilter\InputFilterAwareInterface;
 use Laminas\InputFilter\InputFilterInterface;
-use Laminas\InputFilter\InputFilter;
+use Application\InputFilter\TaskInputFilter;
 
 class Task implements InputFilterAwareInterface
 {
@@ -16,94 +16,33 @@ class Task implements InputFilterAwareInterface
 
     public function exchangeArray(array $data)
     {
-        $this->id = !empty($data['id']) ? $data['id'] : null;
-        $this->title = !empty($data['title']) ? $data['title'] : null;
+        $this->id          = !empty($data['id']) ? $data['id'] : null;
+        $this->title       = !empty($data['title']) ? $data['title'] : null;
         $this->description = !empty($data['description']) ? $data['description'] : null;
-        $this->status = !empty($data['status']) ? $data['status'] : null;
+        $this->status      = !empty($data['status']) ? $data['status'] : null;
+    }
+
+    public function getArrayCopy()
+    {
+        return [
+            'id'          => $this->id,
+            'title'       => $this->title,
+            'description' => $this->description,
+            'status'      => $this->status,
+        ];
     }
 
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
-        throw new \Exception("Not used");
+        throw new \RuntimeException('Not used');
     }
 
     public function getInputFilter()
     {
         if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-
-            $inputFilter->add([
-                'name' => 'id',
-                'required' => true,
-                'filters' => [
-                    ['name' => 'Int'],
-                ],
-            ]);
-
-            $inputFilter->add([
-                'name' => 'title',
-                'required' => true,
-                'filters' => [
-                    ['name' => 'StripTags'],
-                    ['name' => 'StringTrim'],
-                ],
-                'validators' => [
-                    [
-                        'name' => 'StringLength',
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min' => 1,
-                            'max' => 100,
-                        ],
-                    ],
-                ],
-            ]);
-
-            $inputFilter->add([
-                'name' => 'description',
-                'required' => true,
-                'filters' => [
-                    ['name' => 'StripTags'],
-                    ['name' => 'StringTrim'],
-                ],
-                'validators' => [
-                    [
-                        'name' => 'StringLength',
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min' => 1,
-                            'max' => 255,
-                        ],
-                    ],
-                ],
-            ]);
-
-            $inputFilter->add([
-                'name' => 'status',
-                'required' => true,
-                'filters' => [
-                    ['name' => 'StripTags'],
-                    ['name' => 'StringTrim'],
-                ],
-                'validators' => [
-                    [
-                        'name' => 'InArray',
-                        'options' => [
-                            'haystack' => ['pending', 'completed'],
-                            'strict' => \Laminas\Validator\InArray::COMPARE_STRICT,
-                        ],
-                    ],
-                ],
-            ]);
-
-            $this->inputFilter = $inputFilter;
+            $this->inputFilter = new TaskInputFilter();
         }
 
         return $this->inputFilter;
-    }
-
-    public function getArrayCopy()
-    {
-        return get_object_vars($this);
     }
 }

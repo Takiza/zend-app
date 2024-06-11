@@ -6,6 +6,7 @@ use Laminas\Mvc\Controller\AbstractRestfulController;
 use Laminas\View\Model\JsonModel;
 use Application\Model\Product;
 use Application\Model\ProductTable;
+use Application\InputFilter\ProductInputFilter;
 
 class ProductController extends AbstractRestfulController
 {
@@ -49,9 +50,16 @@ class ProductController extends AbstractRestfulController
 
     public function create($data)
     {
+        $inputFilter = new ProductInputFilter();
+        $inputFilter->setData($data);
+
+        if (!$inputFilter->isValid()) {
+            return new JsonModel(['status' => 'error', 'message' => 'Invalid data', 'errors' => $inputFilter->getMessages()]);
+        }
+
         try {
             $product = new Product();
-            $product->exchangeArray($data);
+            $product->exchangeArray($inputFilter->getValues());
             $savedProduct = $this->productTable->saveProduct($product);
             return new JsonModel(['status' => 'success', 'product' => $savedProduct->getArrayCopy()]);
         } catch (\Exception $e) {
@@ -61,13 +69,20 @@ class ProductController extends AbstractRestfulController
 
     public function update($id, $data)
     {
+        $inputFilter = new ProductInputFilter();
+        $inputFilter->setData($data);
+
+        if (!$inputFilter->isValid()) {
+            return new JsonModel(['status' => 'error', 'message' => 'Invalid data', 'errors' => $inputFilter->getMessages()]);
+        }
+
         try {
             $product = $this->productTable->getProduct($id);
             if (!$product) {
                 return new JsonModel(['status' => 'error', 'message' => 'Product not found']);
             }
             $data['id'] = $id;
-            $product->exchangeArray($data);
+            $product->exchangeArray($inputFilter->getValues());
             $updatedProduct = $this->productTable->saveProduct($product);
 
             return new JsonModel(['status' => 'success', 'product' => $updatedProduct->getArrayCopy()]);
