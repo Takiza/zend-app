@@ -16,20 +16,27 @@ class ProductController extends AbstractRestfulController
         $this->productTable = $productTable;
     }
 
+    public function get($id)
+    {
+        try {
+            $product = $this->productTable->getProduct($id);
+            if (!$product) {
+                return new JsonModel(['status' => 'error', 'message' => 'Product not found']);
+            }
+
+            return new JsonModel(['status' => 'success', 'product' => $product->getArrayCopy()]);
+        } catch (\Exception $e) {
+            return new JsonModel(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+    }
+
     public function getList()
     {
         try {
             $products = $this->productTable->fetchAll();
-            $data = [];
-
-            foreach ($products as $product) {
-                $data[] = [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'sku' => $product->sku,
-                    'price' => $product->price,
-                ];
-            }
+            $data = array_map(function($product) {
+                return $product->getArrayCopy();
+            }, iterator_to_array($products));
 
             return new JsonModel([
                 'status' => 'success',

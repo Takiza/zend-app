@@ -37,16 +37,16 @@ class ProductTable
         if ($id === 0) {
             $this->tableGateway->insert($data);
             $id = $this->tableGateway->getLastInsertValue();
-        } else {
-            try {
-                $this->getProduct($id);
-            } catch (\RuntimeException $e) {
-                throw new \RuntimeException("Cannot update product with id $id; does not exist");
-            }
-
-            $this->tableGateway->update($data, ['id' => $id]);
+            return $this->getProduct($id);
         }
 
+        try {
+            $this->getProduct($id);
+        } catch (\RuntimeException $e) {
+            throw new \RuntimeException("Cannot update product with id $id; does not exist");
+        }
+
+        $this->tableGateway->update($data, ['id' => $id]);
         return $this->getProduct($id);
     }
 
